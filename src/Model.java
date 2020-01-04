@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 enum OVERFITTING_AVOIDANCE_TECHNIQUE {
     NONE,
     PRE_PRUNING,
+    MINIMUM_INFORMATION_GAIN
 }
 
 class Node {
@@ -159,6 +160,13 @@ class Model {
             // just get a random value from the entry set. All unknownAttribute values should be the same.
             root.leafValue = entries.iterator().next().attributes[unknownAttr].getValue();
             return;
+        }
+
+        if (technique.equals(OVERFITTING_AVOIDANCE_TECHNIQUE.MINIMUM_INFORMATION_GAIN)) {
+            if (Math.abs(minEntropy - initialEntropy) < 0.3) {
+                root.leafValue = entries.iterator().next().attributes[unknownAttr].getValue();
+                return;
+            }
         }
 
         int bestAttrPossibleValuesCount = Attribute.allowedValues[bestAttribute].length;

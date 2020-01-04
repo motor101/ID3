@@ -46,9 +46,10 @@ public class Attribute {
 
     @Override
     public String toString() {
-        return "Attribute{" +
-                "type=" + types[type] +
-                ", value=" + allowedValues[type][value] +
-                '}';
+//        return "Attribute{" +
+//                "type=" + types[type] +
+//                ", value=" + allowedValues[type][value] +
+//                '}';
+        return allowedValues[type][value];
     }
 }

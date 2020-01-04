@@ -39,7 +39,7 @@ public class Main {
 
     static private void randomizeSample(Entry[] entries) {
         Entry tmp;
-        for (int j = 0; j < 2; j++) {
+        for (int j = 0; j < 10; j++) {
             for (int i = 0; i < entries.length; i++) {
                 int newIndex = random.nextInt(entries.length);
 
@@ -72,9 +72,11 @@ public class Main {
         return entries;
     }
 
-    private Model getBestModel(OVERFITTING_AVOIDANCE_TECHNIQUE technique) {
+    private double getAverageScore(OVERFITTING_AVOIDANCE_TECHNIQUE technique) {
         double bestScore = 0.0;
         Model bestModel = null;
+
+        double scoreSum = 0;
 
         for (int i = 0; i < groupsCount; i++) {
             int teachingGroupId = i;
@@ -96,17 +98,19 @@ public class Main {
 
             double score = model.getScore(testingSet);
 
-            System.out.println("score = " + score);
+//            System.out.println("score = " + score);
 
             if (score > bestScore) {
                 bestScore = score;
                 bestModel = model;
             }
+
+            scoreSum += score;
         }
 
         System.out.println("Best score using overfitting technique " + technique.toString() + " is = " + bestScore);
 
-        return bestModel;
+        return scoreSum / groupsCount;
     }
 
     public static void main(String[] args) {
@@ -130,11 +134,8 @@ public class Main {
 
         Main id3 = new Main(entries, groupsCount, attributesCount);
 
-        Model model = id3.getBestModel(OVERFITTING_AVOIDANCE_TECHNIQUE.NONE);
-        id3.getBestModel(OVERFITTING_AVOIDANCE_TECHNIQUE.PRE_PRUNING);
-
-        System.out.println(model == null);
-        model.getScore(new HashSet<>(Arrays.asList(entries)));
-
+        System.out.println("average score = " + id3.getAverageScore(OVERFITTING_AVOIDANCE_TECHNIQUE.NONE));
+        System.out.println("average score = " + id3.getAverageScore(OVERFITTING_AVOIDANCE_TECHNIQUE.PRE_PRUNING));
+        System.out.println("average score = " + id3.getAverageScore(OVERFITTING_AVOIDANCE_TECHNIQUE.MINIMUM_INFORMATION_GAIN));
     }
 }
